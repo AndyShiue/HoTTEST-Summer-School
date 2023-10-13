@@ -35,10 +35,10 @@ open import sums
 Prove
 ```agda
 uncurry : {A B X : Type} → (A → B → X) → (A × B → X)
-uncurry = {!!}
+uncurry f p = f (pr₁ p) (pr₂ p)
 
 curry : {A B X : Type} → (A × B → X) → (A → B → X)
-curry = {!!}
+curry f a b = f (a , b)
 ```
 You might know these functions from programming e.g. in Haskell.
 But what do they say under the propositions-as-types interpretation?
@@ -49,38 +49,40 @@ But what do they say under the propositions-as-types interpretation?
 Consider the following goals:
 ```agda
 [i] : {A B C : Type} → (A × B) ∔ C → (A ∔ C) × (B ∔ C)
-[i] = {!!}
+[i] (inl (a , b)) = (inl a , inl b)
+[i] (inr c) = (inr c , inr c)
 
 [ii] : {A B C : Type} → (A ∔ B) × C → (A × C) ∔ (B × C)
-[ii] = {!!}
+[ii] (inl a , c) = inl (a , c)
+[ii] (inr b , c) = inr (b , c)
 
 [iii] : {A B : Type} → ¬ (A ∔ B) → ¬ A × ¬ B
-[iii] = {!!}
+[iii] n = {!!} -- TODO: Understand this.
 
 [iv] : {A B : Type} → ¬ (A × B) → ¬ A ∔ ¬ B
-[iv] = {!!}
+[iv] = {!!} -- impossible
 
 [v] : {A B : Type} → (A → B) → ¬ B → ¬ A
-[v] = {!!}
+[v] f g a = g (f a)
 
 [vi] : {A B : Type} → (¬ A → ¬ B) → B → A
-[vi] = {!!}
+[vi] = {!!}  -- impossible
 
 [vii] : {A B : Type} → ((A → B) → A) → A
-[vii] = {!!}
+[vii] = {!!}  -- impossible
 
 [viii] : {A : Type} {B : A → Type}
     → ¬ (Σ a ꞉ A , B a) → (a : A) → ¬ B a
-[viii] = {!!}
+[viii] f a b = f (a , b)
 
 [ix] : {A : Type} {B : A → Type}
     → ¬ ((a : A) → B a) → (Σ a ꞉ A , ¬ B a)
-[ix] = {!!}
+[ix] = {!!} -- impossible
 
 [x] : {A B : Type} {C : A → B → Type}
       → ((a : A) → (Σ b ꞉ B , C a b))
       → Σ f ꞉ (A → B) , ((a : A) → C a (f a))
-[x] = {!!}
+[x] = {!!} -- TODO: Understand this.
 ```
 For each goal determine whether it is provable or not.
 If it is, fill it. If not, explain why it shouldn't be possible.
@@ -100,7 +102,7 @@ In the lecture we have discussed that we can't  prove `∀ {A : Type} → ¬¬ A
 What you can prove however, is
 ```agda
 tne : ∀ {A : Type} → ¬¬¬ A → ¬ A
-tne = {!!}
+tne f a = f (\g → g a)
 ```
 
 
@@ -108,10 +110,10 @@ tne = {!!}
 Prove
 ```agda
 ¬¬-functor : {A B : Type} → (A → B) → ¬¬ A → ¬¬ B
-¬¬-functor = {!!}
+¬¬-functor f dna nb = dna (\a → nb (f a))
 
 ¬¬-kleisli : {A B : Type} → (A → ¬¬ B) → ¬¬ A → ¬¬ B
-¬¬-kleisli = {!!}
+¬¬-kleisli f dna nb = dna (\a → f a nb)
 ```
 Hint: For the second goal use `tne` from the previous exercise
 
@@ -131,7 +133,8 @@ to a true proposition while an uninhabited type corresponds to a false propositi
 With this in mind construct a family
 ```agda
 bool-as-type : Bool → Type
-bool-as-type = {!!}
+bool-as-type true = 𝟙
+bool-as-type false = 𝟘
 ```
 such that `bool-as-type true` corresponds to "true" and
 `bool-as-type false` corresponds to "false". (Hint:
@@ -178,5 +181,5 @@ Prove that
 
 ```agda
 decidable-equality-char : (A : Type) → has-decidable-equality A ⇔ has-bool-dec-fct A
-decidable-equality-char = ?
+decidable-equality-char = {!   !}
 ```

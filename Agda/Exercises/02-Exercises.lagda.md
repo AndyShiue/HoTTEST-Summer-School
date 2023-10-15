@@ -146,7 +146,8 @@ we have seen canonical types corresponding true and false in the lectures)
 Prove
 ```agda
 bool-≡-char₁ : ∀ (b b' : Bool) → b ≡ b' → (bool-as-type b ⇔ bool-as-type b')
-bool-≡-char₁ = {!!}
+bool-≡-char₁ true true eq = id , id
+bool-≡-char₁ false false eq = id , id
 ```
 
 
@@ -164,8 +165,14 @@ You can actually prove this much easier! How?
 
 Finish our characterisation of `_≡_` by proving
 ```agda
+false≢true : ¬ (false ≡ true)
+false≢true ()
+
 bool-≡-char₂ : ∀ (b b' : Bool) → (bool-as-type b ⇔ bool-as-type b') → b ≡ b'
-bool-≡-char₂ = {!!}
+bool-≡-char₂ true true (b→b' , b'→b) = refl true
+bool-≡-char₂ true false (b→b' , b'→b) = 𝟘-elim (b→b' ⋆)
+bool-≡-char₂ false true (b→b' , b'→b) = 𝟘-elim (b'→b ⋆)
+bool-≡-char₂ false false (b→b' , b'→b) = refl false
 ```
 
 

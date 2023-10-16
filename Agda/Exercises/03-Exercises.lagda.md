@@ -43,13 +43,13 @@ can be inferred directly from the same operations on paths.
 Try to prove reflexivity, symmetry and transitivity of `_∼_` by filling these holes.
 ```agda
   ∼-refl : (f : (x : A) → B x) → f ∼ f
-  ∼-refl f x = refl (f x)
+  ∼-refl f = {!!}
 
   ∼-inv : (f g : (x : A) → B x) → (f ∼ g) → (g ∼ f)
-  ∼-inv f g H x = sym (H x)
+  ∼-inv f g H x = {!!}
 
   ∼-concat : (f g h : (x : A) → B x) → f ∼ g → g ∼ h → f ∼ h
-  ∼-concat f g h H K x = trans (H x) (K x)
+  ∼-concat f g h H K x = {!!}
 
   infix 0 _∼_
 ```
@@ -84,10 +84,10 @@ infix 0 _≅_
 Reformulate the same definition using Sigma-types.
 ```agda
 is-bijection' : {A B : Type} → (A → B) → Type
-is-bijection' {A} {B} f = Σ inverse ꞉ (B → A) , (inverse ∘ f ∼ id) × (f ∘ inverse ∼ id)
+is-bijection' f = {!!}
 
 _≅'_ : Type → Type → Type
-A ≅' B = Σ x ꞉ (A → B) , is-bijection' x
+A ≅' B = {!!}
 ```
 The definition with `Σ` is probably more intuitive, but, as discussed above,
 the definition with a record is often easier to work with,
@@ -115,26 +115,26 @@ Prove that 𝟚 and Bool are isomorphic
 
 ```agda
 Bool-𝟚-isomorphism : Bool ≅ 𝟚
-Bool-𝟚-isomorphism = record { bijection = f ; bijectivity = f-is-bijection }
+Bool-𝟚-isomorphism = record { bijection = {!!} ; bijectivity = {!!} }
  where
   f : Bool → 𝟚
-  f false = 𝟎
-  f true  = 𝟏
+  f false = {!!}
+  f true  = {!!}
 
   g : 𝟚 → Bool
-  g 𝟎 = false
-  g 𝟏 = true
+  g 𝟎 = {!!}
+  g 𝟏 = {!!}
 
   gf : g ∘ f ∼ id
-  gf true  = id _
-  gf false = id _
+  gf true  = {!!}
+  gf false = {!!}
 
   fg : f ∘ g ∼ id
-  fg 𝟎 = id _
-  fg 𝟏 = id _
+  fg 𝟎 = {!!}
+  fg 𝟏 = {!!}
 
   f-is-bijection : is-bijection f
-  f-is-bijection = record { inverse = g ; η = gf ; ε = fg }
+  f-is-bijection = record { inverse = {!!} ; η = {!!} ; ε = {!!} }
 ```
 
 
@@ -161,8 +161,8 @@ Fin-elim : (A : {n : ℕ} → Fin n → Type)
 Fin-elim A a f = h
  where
   h : {n : ℕ} (k : Fin n) → A k
-  h zero    = a
-  h (suc k) = f k (Fin-elim A a f k)
+  h zero    = {!!}
+  h (suc k) = {!!}
 ```
 
 We give the other definition of the finite types and introduce some notation.
@@ -188,35 +188,35 @@ Fin-isomorphism : (n : ℕ) → Fin n ≅ Fin' n
 Fin-isomorphism n = record { bijection = f n ; bijectivity = f-is-bijection n }
  where
   f : (n : ℕ) → Fin n → Fin' n
-  f (suc n) zero    = inl ⋆
-  f (suc n) (suc k) = inr (f n k)
+  f (suc n) zero    = {!!}
+  f (suc n) (suc k) = {!!}
 
   g : (n : ℕ) → Fin' n → Fin n
-  g (suc n) (inl ⋆) = zero
-  g (suc n) (inr k) = suc (g n k)
+  g (suc n) (inl ⋆) = {!!}
+  g (suc n) (inr k) = {!!}
 
   gf : (n : ℕ) → g n ∘ f n ∼ id
-  gf (suc n) zero    = refl zero
+  gf (suc n) zero    = {!!}
   gf (suc n) (suc k) = γ
    where
     IH : g n (f n k) ≡ k
     IH = gf n k
 
-    γ = g (suc n) (f (suc n) (suc k)) ≡⟨ ap (g (suc n)) (refl (inr (f n k))) ⟩
-        g (suc n) (suc' (f n k))      ≡⟨ refl (suc (g n (f n k))) ⟩
-        suc (g n (f n k))             ≡⟨ ap suc IH ⟩
+    γ = g (suc n) (f (suc n) (suc k)) ≡⟨ {!!} ⟩
+        g (suc n) (suc' (f n k))      ≡⟨ {!!} ⟩
+        suc (g n (f n k))             ≡⟨ {!!} ⟩
         suc k                         ∎
 
   fg : (n : ℕ) → f n ∘ g n ∼ id
-  fg (suc n) (inl ⋆) = refl (inl ⋆)
+  fg (suc n) (inl ⋆) = {!!}
   fg (suc n) (inr k) = γ
    where
     IH : f n (g n k) ≡ k
     IH = fg n k
 
-    γ = f (suc n) (g (suc n) (suc' k)) ≡⟨ ap (f (suc n)) (refl (suc (g n k))) ⟩
-        f (suc n) (suc (g n k))        ≡⟨ refl (inr _) ⟩
-        suc' (f n (g n k))             ≡⟨ ap suc' IH ⟩
+    γ = f (suc n) (g (suc n) (suc' k)) ≡⟨ {!!} ⟩
+        f (suc n) (suc (g n k))        ≡⟨ {!!} ⟩
+        suc' (f n (g n k))             ≡⟨ {!!} ⟩
         suc' k                         ∎
 
   f-is-bijection : (n : ℕ) → is-bijection (f n)
@@ -234,9 +234,9 @@ Give the recursive definition of the less than or equals relation on the natural
 
 ```agda
 _≤₁_ : ℕ → ℕ → Type
-0     ≤₁ y     = 𝟙
-suc x ≤₁ 0     = 𝟘
-suc x ≤₁ suc y = x ≤₁ y
+0     ≤₁ y     = {!!}
+suc x ≤₁ 0     = {!!}
+suc x ≤₁ suc y = {!!}
 ```
 
 ### Exercise 7 (⋆)
@@ -247,7 +247,7 @@ Translate this definition into HoTT.
 
 ```agda
 is-lower-bound : (P : ℕ → Type) (n : ℕ) → Type
-is-lower-bound P n = ∀ m → P m → n ≤₁ m
+is-lower-bound P n = {!!}
 ```
 
 We define the type of minimal elements of a type family over the naturals.
@@ -261,7 +261,7 @@ minimal-element P = Σ n ꞉ ℕ , (P n) × (is-lower-bound P n)
 Prove that all numbers are at least as large as zero.
 ```agda
 leq-zero : (n : ℕ) → 0 ≤₁ n
-leq-zero n = ⋆
+leq-zero n = {!!}
 ```
 
 
@@ -347,4 +347,3 @@ is-zero-well-ordering-principle P d zero p p0 = {!   !}
 is-zero-well-ordering-principle P d (suc m) pm =
   is-zero-well-ordering-principle-suc P d m pm (d 0) {!!}
 ```
-   

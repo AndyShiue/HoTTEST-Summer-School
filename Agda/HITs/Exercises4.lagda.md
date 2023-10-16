@@ -17,10 +17,15 @@ a path-between-paths-between-paths between the two!
 
 ```agda
 homotopy1 : (loop ∙ ! loop) ∙ loop ≡ loop
-homotopy1 = {!!}
+homotopy1 = (loop ∙ ! loop) ∙ loop ≡⟨ ap (\x → x ∙ loop) (!-inv-r loop) ⟩
+            refl _ ∙ loop          ≡⟨ ∙unit-l loop ⟩
+            loop ∎ 
 
 homotopy2 : (loop ∙ ! loop) ∙ loop ≡ loop
-homotopy2 = {!!}
+homotopy2 = (loop ∙ ! loop) ∙ loop ≡⟨ ! (∙assoc loop (! loop) loop) ⟩
+            loop ∙ (! loop ∙ loop) ≡⟨ ap (\x → loop ∙ x) (!-inv-l loop) ⟩
+            loop ∙ refl _          ≡⟨ ∙unit-r loop ⟩
+            loop ∎ 
 ```
 
 (Harder exercise (🌶️): give a path between homotopy1 and
@@ -43,8 +48,17 @@ Use them to prove that the double function takes loop-inverse to
 loop-inverse concatenated with itself.
 
 ```agda
+ap-! : {A : Type} {f : S1 → A} {x y : S1} (p : x ≡ y) → ap f (! p) ≡ ! (ap f p)
+ap-! (refl _) = refl _
+
+inverse-con : {x y z : S1} (p : x ≡ y) (q : y ≡ z) → ! (p ∙ q) ≡ ! q ∙ ! p
+inverse-con (refl _) (refl _) = refl _
+
 double-!loop : ap double (! loop) ≡ ! loop ∙ ! loop
-double-!loop = {!!}
+double-!loop = ap double (! loop) ≡⟨ ap-! loop ⟩
+               ! (ap double loop) ≡⟨ ap ! calculate-double-loop  ⟩
+               ! (loop ∙ loop)    ≡⟨ inverse-con loop loop  ⟩
+               ! loop ∙ ! loop ∎
 ```
 
 (⋆) Define a function invert : S1 → S1 such that (ap invert) inverts a path
@@ -52,7 +66,7 @@ on the circle, i.e. sends the n-fold loop to the -n-fold loop.
 
 ```agda
 invert : S1 → S1
-invert = {!!}
+invert s = S1-rec base (! loop) s
 ```
 
 # Circles equivalence
@@ -65,14 +79,14 @@ is homotopic to the identity on base and loop:
 
 ```agda
 to-from-base : from (to base) ≡ base
-to-from-base = {!!}
+to-from-base = refl base
 ```
 
 (⋆⋆⋆) 
 
 ```
 to-from-loop : ap from (ap to loop) ≡ loop
-to-from-loop = {!!}
+to-from-loop = S1-rec _ (refl _) base
 ```
 
 Note: the problems below here are progressively more optional, so if you
@@ -93,8 +107,8 @@ paths in product types compose (⋆⋆⋆):
 compose-pair≡ : {A B : Type} {x1 x2 x3 : A} {y1 y2 y3 : B}
                 (p12 : x1 ≡ x2) (p23 : x2 ≡ x3)
                 (q12 : y1 ≡ y2) (q23 : y2 ≡ y3)
-              → ((pair≡ p12 q12) ∙ (pair≡ p23 q23)) ≡ {!!} [ (x1 , y1) ≡ (x3 , y3) [ A × B ] ]
-compose-pair≡ = {!!}
+              → ((pair≡ p12 q12) ∙ (pair≡ p23 q23)) ≡ pair≡ (p12 ∙ p23) (q12 ∙ q23) [ (x1 , y1) ≡ (x3 , y3) [ A × B ] ]
+compose-pair≡ (refl x1) (refl x1) (refl y1) (refl y1) = refl (refl (x1 , y1))
 ```
 
 (🌶️)
@@ -150,3 +164,4 @@ p2s : (A : Type) → SuspFromPush A → Susp A
 p2s A = {!!}
 ```
 
+ 

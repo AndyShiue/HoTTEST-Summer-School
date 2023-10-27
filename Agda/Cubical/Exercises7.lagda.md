@@ -42,11 +42,20 @@ private
 
 State and prove funExt for dependent functions `f g : (x : A) → B x`
 
+```agda
+funExt' : (f g : (x : A) → B x) → ((x : A) → f x ≡ g x) → f ≡ g
+funExt' f g h i x = h x i 
+```
+
 ### Exercise 2 (★)
 
 Generalize the type of ap to dependent function `f : (x : A) → B x`
 (hint: the result should be a `PathP`)
 
+```agda
+apd : {x y : A} (f : (a : A) → B a) (p : x ≡ y) → PathP (λ i → B (p i)) (f x) (f y)
+apd f p i = f (p i)
+```
 
 ## Part II: Some facts about (homotopy) propositions and sets
 
@@ -58,6 +67,10 @@ are defined in `cubical-prelude` in the usual way
 
 State and prove that inhabited propositions are contractible
 
+```agda
+inhab-prop-contr : isProp A → A → isContr A
+inhab-prop-contr is-prop a = a , is-prop a
+```
 
 ### Exercise 4 (★)
 
@@ -65,7 +78,7 @@ Prove
 
 ```agda
 isPropΠ : (h : (x : A) → isProp (B x)) → isProp ((x : A) → B x)
-isPropΠ = {!!}
+isPropΠ h a b i x = h x (a x) (b x) i
 ```
 
 ### Exercise 5 (★)
@@ -74,7 +87,7 @@ Prove the inverse of `funExt` (sometimes called `happly`):
 
 ```agda
 funExt⁻ : {f g : (x : A) → B x} → f ≡ g → ((x : A) → f x ≡ g x)
-funExt⁻  = {!!}
+funExt⁻ p x i = p i x
 ```
 
 ### Exercise 6 (★★)
@@ -222,3 +235,4 @@ result, that is a direct consequence of `comp-filler` in `Cubical Agda`
 rUnit : {x y : A} (p : x ≡ y) → p ∙ refl ≡ p
 rUnit p = sym (comp-filler p refl)
 ```
+ 

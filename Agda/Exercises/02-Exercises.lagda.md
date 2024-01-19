@@ -188,5 +188,30 @@ Prove that
 
 ```agda
 decidable-equality-char : (A : Type) → has-decidable-equality A ⇔ has-bool-dec-fct A
-decidable-equality-char = {!   !}
+decidable-equality-char A = (\p → func p , \x y → (\eq → ≡-nondep-elim (\x y → func p x y ≡ true) (prf1 p) x y eq) , prf2 x y p) ,
+                            (\p x y → dec-prf p x y)
+  where
+    func : has-decidable-equality A → A → A → Bool
+    func p x y with p x y
+    ...           | inl _ = true
+    ...           | inr _ = false
+
+    prf1 : (eq : has-decidable-equality A) → (x : A) → func eq x x ≡ true
+    prf1 eq x with eq x x
+    ...          | (inl p) = refl true
+    ...          | (inr p) = 𝟘-elim (p (refl _))
+
+    prf2 : (x y : A)(p : has-decidable-equality A) → func p x y ≡ true → x ≡ y
+    prf2 x y p with p x y
+    ...           | (inl eq) = \_ → ≡-nondep-elim (\x y → x ≡ y) (\_ → refl _) x y eq
+
+    bool-lemma : (b : Bool) → b ≡ true → b ≡ false → 𝟘
+    bool-lemma true _ ()
+    bool-lemma false ()
+
+    dec-prf : has-bool-dec-fct A → (x y : A) → is-decidable (x ≡ y)
+    dec-prf (f , p) x y with f x y
+    ...                    | true = inl (p x y .pr₂ _)
+    ...                    | false = inr \eq → bool-lemma _ (p x y .pr₁ eq) _
 ```
+  
